@@ -12960,6 +12960,8 @@ with pkgs;
 
     amdgpu-pro = callPackage ../os-specific/linux/amdgpu-pro { };
 
+    anbox = callPackage ../applications/virtualization/anbox { };
+
     batman_adv = callPackage ../os-specific/linux/batman-adv {};
 
     bcc = callPackage ../os-specific/linux/bcc { };
@@ -14151,6 +14153,8 @@ with pkgs;
   androidStudioPackages = callPackage ../applications/editors/android-studio { };
   android-studio = androidStudioPackages.stable;
   android-studio-preview = androidStudioPackages.preview;
+
+  anbox = callPackage ../applications/virtualization/anbox { };
 
   antfs-cli = callPackage ../applications/misc/antfs-cli {};
 
