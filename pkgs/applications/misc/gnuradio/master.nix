@@ -22,6 +22,7 @@
 , SDL
 # Other
 , libusb1, orc, pyopengl
+, log4cpp
 }:
 
 stdenv.mkDerivation rec {
@@ -41,8 +42,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    boost fftw python swig2 lxml qt4
-    qwt SDL libusb1 uhd gsl
+    log4cpp
   ] ++ stdenv.lib.optionals stdenv.isLinux  [ alsaLib   ]
     ++ stdenv.lib.optionals stdenv.isDarwin [ CoreAudio ];
 
