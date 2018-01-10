@@ -77,8 +77,11 @@ stdenv.mkDerivation rec {
   '';
 
   # Framework path needed for qwt6_qt4 but not qwt5
-  cmakeFlags =
-    stdenv.lib.optionals stdenv.isDarwin [ "-DCMAKE_FRAMEWORK_PATH=${qwt}/lib" ];
+  cmakeFlags = [
+    # TODO: force enable and maybe add options for gui, etc
+    "-DENABLE_GNURADIO_RUNTIME=ON"
+  ];
+  # ++ stdenv.lib.optionals stdenv.isDarwin [ "-DCMAKE_FRAMEWORK_PATH=${qwt}/lib" ];
 
   # - Ensure we get an interactive backend for matplotlib. If not the gr_plot_*
   #   programs will not display anything. Yes, $MATPLOTLIBRC must point to the
