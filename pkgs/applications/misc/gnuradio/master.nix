@@ -22,7 +22,12 @@
 , SDL
 # Other
 , libusb1, orc, pyopengl
+
+, python27Packages
 , log4cpp
+# GR-3.8 supports python 3, but not all plugins are guaranteed to
+# May be better to default to python2 for compatibility, but who knows
+#, usePython3 ? true
 }:
 
 stdenv.mkDerivation rec {
@@ -42,12 +47,15 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    boost fftw python swig2 lxml
+    /*qwt*/ SDL libusb1 uhd gsl
+    python27Packages.Mako
     log4cpp
   ] ++ stdenv.lib.optionals stdenv.isLinux  [ alsaLib   ]
     ++ stdenv.lib.optionals stdenv.isDarwin [ CoreAudio ];
 
   propagatedBuildInputs = [
-    cheetah numpy scipy matplotlib pyqt4 pygtk wxPython pyopengl
+    cheetah numpy scipy matplotlib  pygtk wxPython pyopengl
   ];
 
   enableParallelBuilding = true;
@@ -71,8 +79,8 @@ stdenv.mkDerivation rec {
   # patch wxgui and pygtk check due to python importerror in a headless environment
   preConfigure = ''
     export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -Wno-unused-variable ${stdenv.lib.optionalString (!stdenv.isDarwin) "-std=c++11"}"
-    sed -i 's/.*wx\.version.*/set(WX_FOUND TRUE)/g' gr-wxgui/CMakeLists.txt
-    sed -i 's/.*pygtk_version.*/set(PYGTK_FOUND TRUE)/g' grc/CMakeLists.txt
+    #sed -i 's/.*wx\.version.*/set(WX_FOUND TRUE)/g' gr-wxgui/CMakeLists.txt
+    #sed -i 's/.*pygtk_version.*/set(PYGTK_FOUND TRUE)/g' grc/CMakeLists.txt
     find . -name "CMakeLists.txt" -exec sed -i '1iadd_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)' "{}" ";"
   '';
 
@@ -80,6 +88,7 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     # TODO: force enable and maybe add options for gui, etc
     "-DENABLE_GNURADIO_RUNTIME=ON"
+    #"-DENABLE_GR_QTGUI=ON"
   ];
   # ++ stdenv.lib.optionals stdenv.isDarwin [ "-DCMAKE_FRAMEWORK_PATH=${qwt}/lib" ];
 
