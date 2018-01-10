@@ -15473,10 +15473,9 @@ with pkgs;
     qwt = qwt6_qt4;
   };
   gnuradioMaster = callPackage ../applications/misc/gnuradio/master.nix {
-    inherit (python2Packages) cheetah lxml matplotlib numpy python pyopengl pyqt4 scipy wxPython pygtk;
+    python = python2;
     inherit (darwin.apple_sdk.frameworks) CoreAudio;
     fftw = fftwFloat;
-    qwt = qwt6_qt4;
   };
   gnuradio-with-packages = callPackage ../applications/misc/gnuradio/wrapper.nix {
     inherit (python2Packages) python;

@@ -4,15 +4,15 @@
 , cmake, pkgconfig, git, boost, cppunit, fftw
 # => python wrappers
 # May be able to upgrade to swig3
-, python, swig2, numpy, scipy, matplotlib
+, python, swig2#, numpy, scipy, matplotlib
 # => grc - the gnu radio companion
-, cheetah, pygtk
+#, cheetah, pygtk
 # => gr-wavelet: collection of wavelet blocks
 , gsl
 # => gr-qtgui: the Qt-based GUI
-, qt4, qwt, pyqt4
+#, qt5, qwt#, pyqt5
 # => gr-wxgui: the Wx-based GUI
-, wxPython, lxml
+#, wxPython, lxml
 # => gr-audio: audio subsystems (system/OS dependent)
 , alsaLib   # linux   'audio-alsa'
 , CoreAudio # darwin  'audio-osx'
@@ -21,24 +21,45 @@
 # => gr-video-sdl: PAL and NTSC display
 , SDL
 # Other
-, libusb1, orc, pyopengl
-
-, python27Packages
+, libusb1, orc
 , log4cpp
 # GR-3.8 supports python 3, but not all plugins are guaranteed to
 # May be better to default to python2 for compatibility, but who knows
+#python3 in python3 branch not even building so...
 #, usePython3 ? true
 }:
-
+let
+  pythonEnv = python.withPackages(ps: with ps; [
+    Mako
+    six
+    numpy
+    /*
+    #cheetah # for grc #no python3
+    lxml
+    matplotlib
+    numpy
+    pyopengl
+    #pyqt4 #for qt4
+    pyqt5 # for qt5
+    scipy
+    #wxPython #no python3
+    #pygtk     #no python3*/
+  ]);
+in
+# currently focus on qt5 and python3 since qt4/python2 already works
 stdenv.mkDerivation rec {
   name = "gnuradio-${version}";
-  version = "3.7.8-git";
+  version = "3.8.0-git";
 
   src = fetchFromGitHub {
     owner = "gnuradio";
     repo = "gnuradio";
     rev = "3c63f7334d6de70d655aa97fcccbfb950645f4d4";
     sha256 = "0a4b9vqxidl3vzg23mw59q0ikzrkgdpgw95bpi1s4fic1b21js54";
+    /*
+    rev = "7199e7811261af93203a6f207fd21927ea8304a3";
+    sha256 = "12033xa3mrcgxvr80zdnbfgmks17vyz4zdhj6qcklr5h31x0w8f7";
+    */
     fetchSubmodules = true;
   };
 
@@ -47,15 +68,15 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    boost fftw python swig2 lxml
-    /*qwt*/ SDL libusb1 uhd gsl
-    python27Packages.Mako
+    boost fftw swig2
+    SDL libusb1 uhd gsl
     log4cpp
   ] ++ stdenv.lib.optionals stdenv.isLinux  [ alsaLib   ]
     ++ stdenv.lib.optionals stdenv.isDarwin [ CoreAudio ];
 
   propagatedBuildInputs = [
-    cheetah numpy scipy matplotlib  pygtk wxPython pyopengl
+    python
+    pythonEnv
   ];
 
   enableParallelBuilding = true;
@@ -126,7 +147,7 @@ stdenv.mkDerivation rec {
     '';
     homepage = https://www.gnuradio.org;
     license = licenses.gpl3;
-    branch = "next";
+    branch = "python3"; # python3 has next branch merged into it
     platforms = platforms.linux ++ platforms.darwin;
     maintainers = with maintainers; [ bjornfor fpletz ];
   };
