@@ -12311,8 +12311,9 @@ with pkgs;
 
   samba4 = callPackage ../servers/samba/4.x.nix {
     python = python2;
-    # enableLDAP
   };
+
+  sambaMaster = callPackage ../servers/samba/master.nix { };
 
   samba = samba4;
 
