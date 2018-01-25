@@ -23,6 +23,20 @@ let
       ln -s googlemock ./gmocksrc/gmock
     '';
     cmakeFlags = "-DGMOCK_INSTALL_DIR=../gmocksrc";
+    android_image = {
+      "armv7l-linux" = {
+        url = "${imgroot}/2017/06/12/android_1_armhf.img";
+        sha256 = "1za4q6vnj8wgphcqpvyq1r8jg6khz7v6b7h6ws1qkd5ljangf1w5";
+      };
+      "aarch64-linux" = {
+        url = "${imgroot}/2017/08/04/android_1_arm64.img";
+        sha256 = "02yvgpx7n0w0ya64y5c7bdxilaiqj9z3s682l5s54vzfnm5a2bg5";
+      };
+      "x86_64-linux" = {
+        url = "${imgroot}/2017/07/13/android_3_amd64.img";
+        sha256 = "1l22pisan3kfq4hwpizxc24f8lr3m5hd6k69nax10rki9ljypji0";
+      };
+    }.${stdenv.system};
   };
 
   process-cpp = stdenv.mkDerivation rec {
@@ -145,7 +159,6 @@ in {
   };
 
   anbox-image = fetchurl {
-    url = "http://build.anbox.io/android-images/2017/04/12/android_1_amd64.img";
-    sha256 = "1vkbz6gnvjxzxpgfzv6ssxyk877i8dgwrnh53mcg0mr970f8914p";
+    inherit (android_image) src sha256;
   };
 }
