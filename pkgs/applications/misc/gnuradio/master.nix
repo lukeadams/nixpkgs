@@ -56,7 +56,7 @@ stdenv.mkDerivation rec {
     repo = "gnuradio";
     rev = "7199e7811261af93203a6f207fd21927ea8304a3";
     sha256 = "12033xa3mrcgxvr80zdnbfgmks17vyz4zdhj6qcklr5h31x0w8f7";
-    fetchSubmodules = false;
+    fetchSubmodules = true;
   };
 
   nativeBuildInputs = [
