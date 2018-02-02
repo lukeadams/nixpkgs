@@ -15473,7 +15473,7 @@ with pkgs;
     qwt = qwt6_qt4;
   };
   gnuradioMaster = callPackage ../applications/misc/gnuradio/master.nix {
-    python = python2;
+    python = python3;
     inherit (darwin.apple_sdk.frameworks) CoreAudio;
     fftw = fftwFloat;
   };
