@@ -45,8 +45,23 @@ let
     #wxPython #no python3
     #pygtk     #no python3*/
   ]);
-in
 # currently focus on qt5 and python3 since qt4/python2 already works
+  volk = stdenv.mkDerivation rec {
+    name = "volk";
+    version = "333";
+    buildInputs = [ cmake pythonEnv boost ];
+    patchPhase = ''
+      sed -i '/print(kernel_file)/a'
+    '';
+    src = fetchFromGitHub {
+      owner = "gnuradio";
+      repo = "volk";
+      rev = "81325a299de710ea7b78d2210e6727b0385ede07";
+      sha256 = "075vn7cgjf5f583kdhhc40mjh6bairhcppwxgi8qg419wqd1lvsc";
+      fetchSubmodules = false;
+    };
+  };
+in
 stdenv.mkDerivation rec {
   name = "gnuradio-${version}";
   version = "3.8.0-git";
@@ -55,8 +70,8 @@ stdenv.mkDerivation rec {
     owner = "gnuradio";
     repo = "gnuradio";
     rev = "7199e7811261af93203a6f207fd21927ea8304a3";
-    sha256 = "12033xa3mrcgxvr80zdnbfgmks17vyz4zdhj6qcklr5h31x0w8f7";
-    fetchSubmodules = true;
+    sha256 = "0hjplp80jd5sw46jgh592v9vpbb392048nmyqrj6r6mbkq249xdx";
+    fetchSubmodules = false;
   };
 
   nativeBuildInputs = [
@@ -64,6 +79,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
+    volk
     boost fftw swig2
     SDL libusb1 uhd gsl
     log4cpp
@@ -105,6 +121,7 @@ stdenv.mkDerivation rec {
   cmakeFlags = [
     # TODO: force enable and maybe add options for gui, etc
     "-DENABLE_GNURADIO_RUNTIME=ON"
+    "-DENABLE_INTERNAL_VOLK=OFF" # We need to use latest master. Build as a seperate derivation
     #"-DENABLE_GR_QTGUI=ON"
   ];
   # ++ stdenv.lib.optionals stdenv.isDarwin [ "-DCMAKE_FRAMEWORK_PATH=${qwt}/lib" ];
