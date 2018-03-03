@@ -46,21 +46,21 @@ let
     #pygtk     #no python3*/
   ]);
 # currently focus on qt5 and python3 since qt4/python2 already works
-  volk = stdenv.mkDerivation rec {
-    name = "volk";
-    version = "333";
-    buildInputs = [ cmake pythonEnv boost ];
-    patchPhase = ''
-      sed -i '/print(kernel_file)/a'
-    '';
-    src = fetchFromGitHub {
-      owner = "gnuradio";
-      repo = "volk";
-      rev = "81325a299de710ea7b78d2210e6727b0385ede07";
-      sha256 = "075vn7cgjf5f583kdhhc40mjh6bairhcppwxgi8qg419wqd1lvsc";
-      fetchSubmodules = false;
-    };
-  };
+  # volk = stdenv.mkDerivation rec {
+  #   name = "volk";
+  #   version = "333";
+  #   buildInputs = [ cmake pythonEnv boost ];
+  #   patchPhase = ''
+  #     sed -i '/print(kernel_file)/a'
+  #   '';
+  #   src = fetchFromGitHub {
+  #     owner = "gnuradio";
+  #     repo = "volk";
+  #     rev = "81325a299de710ea7b78d2210e6727b0385ede07";
+  #     sha256 = "075vn7cgjf5f583kdhhc40mjh6bairhcppwxgi8qg419wqd1lvsc";
+  #     fetchSubmodules = false;
+  #   };
+  # };
 in
 stdenv.mkDerivation rec {
   name = "gnuradio-${version}";
@@ -69,9 +69,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "gnuradio";
     repo = "gnuradio";
-    rev = "7199e7811261af93203a6f207fd21927ea8304a3";
-    sha256 = "0hjplp80jd5sw46jgh592v9vpbb392048nmyqrj6r6mbkq249xdx";
-    fetchSubmodules = false;
+    rev = "7e758dd41aa8ff72e6be903d682dbdd922ecc8dc";
+    sha256 = "1ki52dj4k705i079xz0c8j69zv3ccqfddxsannaxzhvw37j2ilzk";
+    fetchSubmodules = true;
   };
 
   nativeBuildInputs = [
@@ -79,7 +79,7 @@ stdenv.mkDerivation rec {
   ];
 
   buildInputs = [
-    volk
+    # volk
     boost fftw swig2
     SDL libusb1 uhd gsl
     log4cpp
@@ -87,16 +87,16 @@ stdenv.mkDerivation rec {
     ++ stdenv.lib.optionals stdenv.isDarwin [ CoreAudio ];
 
   propagatedBuildInputs = [
-    python
+    # python
     pythonEnv
   ];
 
   enableParallelBuilding = true;
 
   postPatch = ''
-    substituteInPlace \
-        gr-fec/include/gnuradio/fec/polar_decoder_common.h \
-        --replace BOOST_CONSTEXPR_OR_CONST const
+    # substituteInPlace \
+        # gr-fec/include/gnuradio/fec/polar_decoder_common.h \
+        # --replace BOOST_CONSTEXPR_OR_CONST const
   '';
 
   # Enables composition with nix-shell
@@ -111,17 +111,17 @@ stdenv.mkDerivation rec {
 
   # patch wxgui and pygtk check due to python importerror in a headless environment
   preConfigure = ''
-    export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -Wno-unused-variable ${stdenv.lib.optionalString (!stdenv.isDarwin) "-std=c++11"}"
+    # export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -Wno-unused-variable ${stdenv.lib.optionalString (!stdenv.isDarwin) "-std=c++11"}"
     #sed -i 's/.*wx\.version.*/set(WX_FOUND TRUE)/g' gr-wxgui/CMakeLists.txt
     #sed -i 's/.*pygtk_version.*/set(PYGTK_FOUND TRUE)/g' grc/CMakeLists.txt
-    find . -name "CMakeLists.txt" -exec sed -i '1iadd_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)' "{}" ";"
+    # find . -name "CMakeLists.txt" -exec sed -i '1iadd_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++11>)' "{}" ";"
   '';
 
   # Framework path needed for qwt6_qt4 but not qwt5
   cmakeFlags = [
     # TODO: force enable and maybe add options for gui, etc
     "-DENABLE_GNURADIO_RUNTIME=ON"
-    "-DENABLE_INTERNAL_VOLK=OFF" # We need to use latest master. Build as a seperate derivation
+    # "-DENABLE_INTERNAL_VOLK=OFF" # We need to use latest master. Build as a seperate derivation
     #"-DENABLE_GR_QTGUI=ON"
   ];
   # ++ stdenv.lib.optionals stdenv.isDarwin [ "-DCMAKE_FRAMEWORK_PATH=${qwt}/lib" ];
