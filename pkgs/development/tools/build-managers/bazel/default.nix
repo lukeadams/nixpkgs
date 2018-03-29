@@ -1,5 +1,5 @@
 { stdenv, lib, fetchurl, jdk, zip, unzip, bash, writeScriptBin, coreutils, makeWrapper, which, python
-, CoreServices, Foundation
+, xcbuild, CoreServices, Foundation
 
 # Always assume all markers valid (don't redownload dependencies).
 # Also, don't clean up environment variables.
@@ -47,7 +47,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     jdk
-  ] ++ lib.optionals stdenv.isDarwin [ CoreServices Foundation ];
+  ] ++ lib.optionals stdenv.isDarwin [ xcbuild CoreServices Foundation ];
 
   nativeBuildInputs = [
     zip
