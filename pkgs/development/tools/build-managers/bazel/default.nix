@@ -99,7 +99,7 @@ stdenv.mkDerivation rec {
     mkdir -p $out/bin
     mv output/bazel $out/bin
     wrapProgram "$out/bin/bazel" \
-      --prefix PATH : "${lib.makeBinPath [ stdenv.cc jdk ]}" \
+      --prefix PATH : "${lib.makeBinPath [ jdk ]}" \
       --set JAVA_HOME "${jdk}"
     mkdir -p $out/share/bash-completion/completions $out/share/zsh/site-functions
     mv output/bazel-complete.bash $out/share/bash-completion/completions/
