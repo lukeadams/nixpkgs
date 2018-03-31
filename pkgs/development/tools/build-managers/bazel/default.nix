@@ -43,6 +43,15 @@ stdenv.mkDerivation rec {
         --replace /usr/bin/env ${coreutils}/bin/env
     done
     patchShebangs .
+  '' + lib.optionalString stdenv.isDarwin ''
+    sed -i 's,/usr/bin/xcrun clang,clang,g' \
+      scripts/bootstrap/compile.sh \
+      src/tools/xcode/realpath/BUILD \
+      src/tools/xcode/stdredirect/BUILD \
+      src/tools/xcode/xcrunwrapper/xcrunwrapper.sh
+    sed -i 's,/usr/bin/xcrun "''${TOOLNAME}","''${TOOLNAME}",g' \
+      src/tools/xcode/xcrunwrapper/xcrunwrapper.sh
+    sed -i 's/"xcrun", "clang"/"clang"/g' tools/osx/xcode_configure.bzl
   '';
 
   dontUseXcbuild = true;
