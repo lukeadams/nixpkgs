@@ -48,7 +48,7 @@ stdenv.mkDerivation rec {
       scripts/bootstrap/compile.sh \
       src/tools/xcode/realpath/BUILD \
       src/tools/xcode/stdredirect/BUILD
-    sed -i 's/"xcrun", "clang"/"clang"/g' tools/osx/xcode_configure.bzl
+    sed -i 's/"xcrun", "clang"/"clang"/g' tools/osx/BUILD
     sed -i 's@/usr/bin/libtool@${libtool}/bin/libtool@g' tools/cpp/unix_cc_configure.bzl
   '';
 
