@@ -45,6 +45,8 @@ stdenv.mkDerivation rec {
     patchShebangs .
   '';
 
+  dontUseXcbuild = true;
+
   buildInputs = [
     jdk
   ] ++ lib.optionals stdenv.isDarwin [ xcbuild CoreServices Foundation ];
