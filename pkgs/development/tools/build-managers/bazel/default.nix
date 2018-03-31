@@ -1,5 +1,5 @@
 { stdenv, lib, fetchurl, jdk, zip, unzip, bash, writeScriptBin, coreutils, makeWrapper, which, python
-, xcbuild, CoreServices, Foundation
+, libtool, xcbuild, CoreServices, Foundation
 
 # Always assume all markers valid (don't redownload dependencies).
 # Also, don't clean up environment variables.
@@ -47,18 +47,16 @@ stdenv.mkDerivation rec {
     sed -i 's,/usr/bin/xcrun clang,clang,g' \
       scripts/bootstrap/compile.sh \
       src/tools/xcode/realpath/BUILD \
-      src/tools/xcode/stdredirect/BUILD \
-      src/tools/xcode/xcrunwrapper/xcrunwrapper.sh
-    sed -i 's,/usr/bin/xcrun "''${TOOLNAME}","''${TOOLNAME}",g' \
-      src/tools/xcode/xcrunwrapper/xcrunwrapper.sh
+      src/tools/xcode/stdredirect/BUILD
     sed -i 's/"xcrun", "clang"/"clang"/g' tools/osx/xcode_configure.bzl
+    sed -i 's@/usr/bin/libtool@${libtool}/bin/libtool@g' tools/cpp/unix_cc_configure.bzl
   '';
 
   dontUseXcbuild = true;
 
   buildInputs = [
     jdk
-  ] ++ lib.optionals stdenv.isDarwin [ xcbuild CoreServices Foundation ];
+  ] ++ lib.optionals stdenv.isDarwin [ libtool xcbuild CoreServices Foundation ];
 
   nativeBuildInputs = [
     zip
