@@ -12,6 +12,8 @@
 , qt5
 , rtaudio
 , libpulseaudio
+
+, gstreamer ,gst-plugins-base, gst-plugins-good, gst-plugins-bad, gst-plugins-ugly
 }:
 let
 aasdk = stdenv.mkDerivation rec {
@@ -64,6 +66,7 @@ stdenv.mkDerivation rec {
   '';
   shellHook = ''
     export QT_QPA_PLATFORM_PLUGIN_PATH=${qt5.qtbase.bin}/lib/qt-*/plugins/platforms
+    export GST_PLUGIN_PATH="${with gst_all_1; stdenv.lib.makeSearchPath "lib/gstreamer-1.0" [ gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly ]}"
   '';
   meta = with stdenv.lib; {
     description = "Creates a cute cat chasing around your mouse cursor";
