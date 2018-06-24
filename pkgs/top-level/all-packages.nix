@@ -11007,6 +11007,8 @@ with pkgs;
 
   oneko = callPackage ../applications/misc/oneko { };
 
+  openauto = callPackage ../applications/misc/openauto { };
+
   oniguruma = callPackage ../development/libraries/oniguruma { };
 
   oobicpl = callPackage ../development/libraries/science/biology/oobicpl { };
