@@ -15271,6 +15271,11 @@ in
 
   opencl-clhpp = callPackage ../development/libraries/opencl-clhpp { };
 
+  opencoarrays = callPackage ../development/libraries/opencoarrays {
+    fortranCompiler = gfortran;
+    mpiImplementation = openmpi;
+  };
+
   opencollada = callPackage ../development/libraries/opencollada { };
 
   opencore-amr = callPackage ../development/libraries/opencore-amr { };
