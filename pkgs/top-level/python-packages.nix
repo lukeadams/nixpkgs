@@ -3602,6 +3602,8 @@ in {
 
   Logbook = callPackage ../development/python-modules/Logbook { };
 
+  Logentries = callPackage ../development/python-modules/Logentries { };
+  
   logfury = callPackage ../development/python-modules/logfury { };
 
   logilab_astng = callPackage ../development/python-modules/logilab_astng { };
